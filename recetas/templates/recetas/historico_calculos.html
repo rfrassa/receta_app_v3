@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Histórico de Cálculos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; }
+        .container { max-width: 1000px; }
+        .table { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Histórico de Cálculos</h1>
+        <a href="{% url 'calcular_insumos_web' %}" class="btn btn-secondary mb-3">Volver</a>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fecha de Cálculo</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Temporada</th>
+                    <th>Insumos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for calculo in calculos %}
+                    <tr>
+                        <td>{{ calculo.fecha_calculo }}</td>
+                        <td>{{ calculo.fecha_inicio }}</td>
+                        <td>{{ calculo.fecha_fin }}</td>
+                        <td>{{ calculo.temporada }}</td>
+                        <td>
+                            <ul>
+                                {% for item in calculo.insumos %}
+                                    <li>{{ item.codigo }} - {{ item.insumo }}: {{ item.cantidad }} {{ item.unidad }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">No hay cálculos registrados.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

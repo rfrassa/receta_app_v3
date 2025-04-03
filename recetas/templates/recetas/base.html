@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestión de Recetas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+        input, select {
+            padding: 8px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .success-message {
+            color: green;
+            margin-bottom: 15px;
+        }
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Recetas</h1>
+        <div class="nav-links">
+            <a href="{% url 'cargar_insumo' %}">Cargar Insumo</a>
+            <a href="{% url 'cargar_receta' %}">Cargar Receta</a>
+            <a href="{% url 'cargar_ingrediente' %}">Cargar Ingrediente</a>
+            <a href="{% url 'cargar_menu_diario' %}">Cargar Menú Diario</a>
+            <a href="{% url 'calcular_insumos_web' %}">Calcular Insumos</a>
+            <a href="{% url 'historial_calculos' %}">Historial de Cálculos</a>
+        </div>
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

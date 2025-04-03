@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de URLs Disponibles</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/  css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; }
+        .container { max-width: 800px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de URLs Disponibles</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>URL</th>
+                    <th>Nombre</th>
+                    <th>Vista</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for url in urls %}
+                    <tr>
+                        <td>{{ url.url }}</td>
+                        <td>{{ url.name }}</td>
+                        <td>{{ url.view }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3">No se encontraron URLs.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'calcular_insumos_web' %}" class="btn btn-secondary">Volver</a>
+    </div>
+</body>
+</html>

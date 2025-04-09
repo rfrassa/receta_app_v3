@@ -1,24 +1,13 @@
 {% extends 'recetas/base.html' %}
 
+{% block title %}Cargar Insumo{% endblock %}
+
 {% block content %}
-<h2>Cargar Insumo</h2>
-{% if success %}
-    <p class="success-message">Insumo cargado exitosamente.</p>
-{% endif %}
-{% if form.errors %}
-    <p class="error-message">Por favor corrige los errores en el formulario.</p>
-{% endif %}
-<form method="post">
-    {% csrf_token %}
-    {% for field in form %}
-        <div class="form-group">
-            <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
-            {{ field }}
-            {% if field.errors %}
-                <span class="error-message">{{ field.errors }}</span>
-            {% endif %}
-        </div>
-    {% endfor %}
-    <button type="submit">Guardar</button>
-</form>
+    <h1>Cargar Insumo</h1>
+    <form method="post" action="{% url 'recetas:cargar_insumo' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar Insumo</button>
+    </form>
+    <a href="{% url 'recetas:index' %}" class="btn btn-secondary">Volver al Inicio</a>
 {% endblock %}

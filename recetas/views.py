@@ -211,3 +211,32 @@ def listar_urls(request):
 
     return render(request, 'recetas/listar_urls.html', {'urls': urls})
 
+def index(request):
+    # Obtener las últimas recetas (por ejemplo, las 5 más recientes)
+    recetas = Receta.objects.all().order_by('-id')[:5]
+    # Obtener los últimos menús diarios (por ejemplo, los 5 más recientes)
+    menus = MenuDiario.objects.all().order_by('-fecha')[:5]
+    return render(request, 'recetas/index.html', {
+        'recetas': recetas,
+        'menus': menus,
+    })
+    
+def cargar_insumo(request):
+    if request.method == 'POST':
+        form = InsumoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('recetas:cargar_insumo')
+    else:
+        form = InsumoForm()
+    return render(request, 'recetas/cargar_insumo.html', {'form': form})
+
+def cargar_receta(request):
+    if request.method == 'POST':
+        form = RecetaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('recetas:cargar_receta')
+    else:
+        form = RecetaForm()
+    return render(request, 'recetas/cargar_receta.html', {'form': form})

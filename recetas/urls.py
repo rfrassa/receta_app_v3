@@ -1,5 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from django.urls import path
+from . import views  # Importa las vistas desde el mismo directorio
 from .views import (
     InsumoViewSet, RecetaViewSet, IngredienteViewSet, MenuDiarioViewSet,
     calcular_insumos_web, exportar_insumos_excel, agregar_insumo, agregar_receta,
@@ -21,4 +23,6 @@ urlpatterns = [
     path('agregar-ingrediente/', agregar_ingrediente, name='agregar_ingrediente'),
     path('agregar-menu-diario/', agregar_menu_diario, name='agregar_menu_diario'),
     path('historico-calculos/', historico_calculos, name='historico_calculos'),
-]
+    path('receta/<int:receta_id>/', views.ver_receta_completa, name='ver_receta_completa'),
+    path('calcular_insumos/', views.calcular_insumos_web, name='calcular_insumos_web'),
+    ]

@@ -1,61 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Calcular Insumos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { padding: 20px; }
-        .container { max-width: 800px; }
-        .btn { margin: 5px; }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Calcular Insumos Necesarios</h1>
-        <div>
-            <a href="{% url 'agregar_insumo' %}" class="btn btn-primary">Agregar Insumo</a>
-            <a href="{% url 'agregar_receta' %}" class="btn btn-primary">Agregar Receta</a>
-            <a href="{% url 'agregar_ingrediente' %}" class="btn btn-primary">Agregar Ingrediente</a>
-            <a href="{% url 'agregar_menu_diario' %}" class="btn btn-primary">Agregar Menú Diario</a>
-            <a href="{% url 'historico_calculos' %}" class="btn btn-info">Ver Histórico</a>
-        </div>
-        <hr>
-        <form method="get">
-            <div class="mb-3">
-                <label for="fecha_inicio" class="form-label">Fecha Inicio:</label>
-                <input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ fecha_inicio }}" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="fecha_fin" class="form-label">Fecha Fin:</label>
-                <input type="date" name="fecha_fin" id="fecha_fin" value="{{ fecha_fin }}" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="temporada" class="form-label">Temporada:</label>
-                <select name="temporada" id="temporada" class="form-control">
-                    <option value="verano" {% if temporada == 'verano' %}selected{% endif %}>Verano</option>
-                    <option value="invierno" {% if temporada == 'invierno' %}selected{% endif %}>Invierno</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-success">Calcular</button>
-        </form>
+    <h1>Calcular Insumos</h1>
+    <form method="GET" action="{% url 'calcular_insumos_web' %}">
+        <label>Fecha Inicio:</label>
+        <input type="date" name="fecha_inicio" value="{{ fecha_inicio }}">
+        <label>Fecha Fin:</label>
+        <input type="date" name="fecha_fin" value="{{ fecha_fin }}">
+        <label>Temporada:</label>
+        <select name="temporada">
+            <option value="verano" {% if temporada == 'verano' %}selected{% endif %}>Verano</option>
+            <option value="invierno" {% if temporada == 'invierno' %}selected{% endif %}>Invierno</option>
+        </select>
+        <button type="submit">Calcular</button>
+    </form>
 
-        {% if insumos %}
-            <form method="get" action="{% url 'exportar_insumos_excel' %}">
-                <input type="hidden" name="fecha_inicio" value="{{ fecha_inicio }}">
-                <input type="hidden" name="fecha_fin" value="{{ fecha_fin }}">
-                <input type="hidden" name="temporada" value="{{ temporada }}">
-                <button type="submit" class="btn btn-primary mt-3">Exportar a Excel</button>
-            </form>
-        {% endif %}
+    {% if insumos %}
+        <h2>Insumos Necesarios</h2>
+        <table>
+            <tr>
+                <th>Código</th>
+                <th>Insumo</th>
+                <th>Cantidad</th>
+                <th>Unidad</th>
+            </tr>
+            {% for insumo in insumos %}
+                <tr>
+                    <td>{{ insumo.codigo }}</td>
+                    <td>{{ insumo.insumo }}</td>
+                    <td>{{ insumo.cantidad }}</td>
+                    <td>{{ insumo.unidad }}</td>
+                </tr>
+            {% endfor %}
+        </table>
 
-        <h2 class="mt-4">Insumos Necesarios</h2>
-        <ul class="list-group">
-        {% for item in insumos %}
-            <li class="list-group-item">{{ item.codigo }} - {{ item.insumo }}: {{ item.cantidad }} {{ item.unidad }}</li>
-        {% empty %}
-            <li class="list-group-item">No hay datos para calcular. Asegúrate de haber asignado recetas a las fechas seleccionadas.</li>
-        {% endfor %}
+        <h2>Recetas Involucradas</h2>
+        <ul>
+            {% for menu in menus %}
+                <li>
+                    {{ menu.receta.nombre }} ({{ menu.fecha }} - {{ menu.comensales }} comensales)
+
+                    <a href="{% url 'ver_receta_completa' menu.receta.id %}?fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}&temporada={{ temporada }}">Ver detalles</a>
+                </li>
+            {% endfor %}
         </ul>
-    </div>
+
+        <a href="{% url 'exportar_insumos_excel' %}?fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}&temporada={{ temporada }}">Exportar a Excel</a>
+    {% else %}
+        <p>No hay insumos calculados para este rango de fechas.</p>
+    {% endif %}
 </body>
 </html>

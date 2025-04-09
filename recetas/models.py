@@ -21,12 +21,16 @@ class Receta(models.Model):
         return f"{self.codigo} - {self.nombre} ({self.temporada} - {self.tipo_comida})"
 
 class Ingrediente(models.Model):
-    receta = models.ForeignKey(Receta, on_delete=models.CASCADE, related_name='ingredientes')
     insumo = models.ForeignKey(Insumo, on_delete=models.CASCADE)
+    receta = models.ForeignKey(Receta, on_delete=models.CASCADE, related_name="ingredientes")
     cantidad = models.FloatField()
+    unidad = models.CharField(max_length=20)
+        
 
     def __str__(self):
         return f"{self.insumo.nombre} - {self.cantidad} {self.insumo.unidad} para {self.receta.nombre}"
+ #   def __str__(self):
+  #      return f"{self.cantidad} {self.unidad} de {self.insumo.nombre}"
 
 class MenuDiario(models.Model):
     fecha = models.DateField()

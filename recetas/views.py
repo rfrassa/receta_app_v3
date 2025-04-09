@@ -10,6 +10,11 @@ import json
 from .models import Insumo, Receta, Ingrediente, MenuDiario, CalculoInsumos
 from .serializers import InsumoSerializer, RecetaSerializer, IngredienteSerializer, MenuDiarioSerializer
 from .forms import InsumoForm, RecetaForm, IngredienteForm, MenuDiarioForm
+from .models import Receta
+from django.shortcuts import render, redirect, get_object_or_404  # Consolidado aquí
+from django.urls import get_resolver
+
+
 
 class InsumoViewSet(viewsets.ModelViewSet):
     queryset = Insumo.objects.all()
@@ -120,20 +125,26 @@ def calcular_insumos_web(request):
     temporada = request.GET.get('temporada', 'verano')
 
     insumos = []
+    menus = []
     if fecha_inicio and fecha_fin:
         url = 'http://127.0.0.1:8000/api/menu-diario/calcular_insumos/'
         params = {'fecha_inicio': fecha_inicio, 'fecha_fin': fecha_fin, 'temporada': temporada}
         response = requests.get(url, params=params)
         if response.status_code == 200:
             insumos = response.json()
+        
+        # Obtener los menús diarios para mostrar las recetas
+        from .models import MenuDiario
+        menus = MenuDiario.objects.filter(fecha__range=[fecha_inicio, fecha_fin], temporada=temporada)
 
     return render(request, 'recetas/calcular_insumos.html', {
         'insumos': insumos,
+        'menus': menus,  # Añadido
         'fecha_inicio': fecha_inicio,
         'fecha_fin': fecha_fin,
         'temporada': temporada
     })
-
+    
 def exportar_insumos_excel(request):
     fecha_inicio = request.GET.get('fecha_inicio')
     fecha_fin = request.GET.get('fecha_fin')
@@ -165,6 +176,19 @@ def historico_calculos(request):
 
 from django.urls import get_resolver
 
+def ver_receta_completa(request, receta_id):
+    # Obtener la receta o devolver 404 si no existe
+    receta = get_object_or_404(Receta, id=receta_id)
+  # Obtener todos los ingredientes asociados a la receta
+    ingredientes = receta.ingredientes.all()
+    # Contexto para la plantilla
+    context = {
+        'receta': receta,
+        'ingredientes': ingredientes,
+    }
+    
+    return render(request, 'recetas/ver_receta_completa.html', context)
+
 def listar_urls(request):
     urls = []
 
@@ -186,3 +210,4 @@ def listar_urls(request):
     extract_urls(get_resolver().url_patterns)
 
     return render(request, 'recetas/listar_urls.html', {'urls': urls})
+

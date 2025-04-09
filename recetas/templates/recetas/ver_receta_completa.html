@@ -1,0 +1,25 @@
+def calcular_insumos_web(request):
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    temporada = request.GET.get('temporada', 'verano')
+
+    insumos = []
+    menus = []
+    if fecha_inicio and fecha_fin:
+        url = 'http://127.0.0.1:8000/api/menu-diario/calcular_insumos/'
+        params = {'fecha_inicio': fecha_inicio, 'fecha_fin': fecha_fin, 'temporada': temporada}
+        response = requests.get(url, params=params)
+        if response.status_code == 200:
+            insumos = response.json()
+        
+        # Obtener los menús diarios para mostrar las recetas
+        from .models import MenuDiario
+        menus = MenuDiario.objects.filter(fecha__range=[fecha_inicio, fecha_fin], temporada=temporada)
+
+    return render(request, 'recetas/calcular_insumos.html', {
+        'insumos': insumos,
+        'menus': menus,  # Añadido
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
+        'temporada': temporada
+    })

@@ -82,6 +82,7 @@
             <a href="{% url 'cargar_menu_diario' %}">Cargar Menú Diario</a>
             <a href="{% url 'calcular_insumos_web' %}">Calcular Insumos</a>
             <a href="{% url 'historial_calculos' %}">Historial de Cálculos</a>
+            <a href="{% url 'ver_receta_completa' receta.id %}">Ver detalles</a>
         </div>
         {% block content %}
         {% endblock %}

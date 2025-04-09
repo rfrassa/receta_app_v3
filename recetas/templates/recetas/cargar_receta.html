@@ -1,9 +1,13 @@
 {% extends 'recetas/base.html' %}
 
+{% block title %}Cargar Receta{% endblock %}
+
 {% block content %}
-<h2>Cargar Receta</h2>
-{% if success %}
-    <p class="success-message">Receta cargada exitosamente.</p>
-{% endif %}
-{% if form.errors %}
-    <p class="error-message">Por favor corrige los errores en el formulario.</p>
+    <h1>Cargar Receta</h1>
+    <form method="post" action="{% url 'recetas:cargar_receta' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar Receta</button>
+    </form>
+    <a href="{% url 'recetas:index' %}" class="btn btn-secondary">Volver al Inicio</a>
+{% endblock %}

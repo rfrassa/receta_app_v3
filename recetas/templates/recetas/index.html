@@ -1,0 +1,43 @@
+{% extends 'recetas/base.html' %}
+
+{% block title %}Inicio - Recetas App{% endblock %}
+
+{% block content %}
+    <h1>Bienvenido a Recetas App</h1>
+    <p>Explora las recetas y menús diarios, o utiliza las herramientas para calcular insumos.</p>
+
+    <h2>Últimas Recetas</h2>
+    {% if recetas %}
+        <ul>
+            {% for receta in recetas %}
+                <li>
+                    <a href="{% url 'recetas:ver_receta_completa' receta.id %}">{{ receta.nombre }}</a>
+                </li>
+            {% empty %}
+                <li>No hay recetas disponibles.</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay recetas para mostrar.</p>
+    {% endif %}
+
+    <h2>Últimos Menús Diarios</h2>
+    {% if menus %}
+        <ul>
+            {% for menu in menus %}
+                <li>
+                    {{ menu.fecha }} - {{ menu.temporada }}: 
+                    <a href="{% url 'recetas:ver_receta_completa' menu.receta.id %}">{{ menu.receta.nombre }}</a>
+                    ({{ menu.comensales }} comensales)
+                </li>
+            {% empty %}
+                <li>No hay menús diarios disponibles.</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay menús diarios para mostrar.</p>
+    {% endif %}
+
+    <a href="{% url 'recetas:agregar_receta' %}" class="btn btn-primary">Agregar Nueva Receta</a>
+    <a href="{% url 'recetas:calcular_insumos' %}" class="btn btn-secondary">Calcular Insumos</a>
+{% endblock %}

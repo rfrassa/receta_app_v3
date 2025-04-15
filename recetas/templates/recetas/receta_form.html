@@ -1,0 +1,12 @@
+<!-- recetas/templates/recetas/receta_form.html -->
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+    <h1>{% if form.instance.pk %}Editar Receta{% else %}Agregar Receta{% endif %}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'recetas:gestionar_recetas' %}" class="btn btn-secondary">Volver</a>
+    </form>
+{% endblock %}

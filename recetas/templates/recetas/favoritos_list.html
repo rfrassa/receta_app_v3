@@ -1,0 +1,19 @@
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+<h1>Mis Recetas Favoritas</h1>
+
+{% if favoritos %}
+    <ul class="list-group">
+        {% for favorito in favoritos %}
+            <li class="list-group-item">
+                <a href="{% url 'recetas:ver_receta_completa' favorito.receta.id %}">{{ favorito.receta.nombre }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No tenés recetas favoritas todavía.</p>
+{% endif %}
+
+<a href="{% url 'recetas:index' %}" class="btn btn-secondary mt-3">Volver al inicio</a>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+    <h1>Importar Ingredientes</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="archivo" required>
+        <button type="submit" class="btn btn-primary">Importar</button>
+    </form>
+    <a href="{% url 'recetas:index' %}" class="btn btn-secondary mt-3">Volver al Inicio</a>
+{% endblock %}

@@ -1,0 +1,20 @@
+<!-- recetas/templates/recetas/receta_list.html -->
+<td>
+    <a href="{% url 'recetas:ver_receta_completa' receta.pk %}" class="btn btn-sm btn-info">Ver</a>
+    <a href="{% url 'recetas:receta_edit' receta.pk %}" class="btn btn-sm btn-warning">Editar</a>
+    <a href="{% url 'recetas:receta_delete' receta.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'recetas:toggle_favorito' receta.pk %}" style="display:inline;">
+            {% csrf_token %}
+            {% if receta in user.favoritos.all %}
+                <button type="submit" class="btn btn-link p-0" title="Quitar de Favoritos">
+                    <i class="bi bi-heart-fill heart-animation heart-beat" style="color: #ff69b4; font-size: 1.2rem;"></i>
+                </button>
+            {% else %}
+                <button type="submit" class="btn btn-link p-0" title="Agregar a Favoritos">
+                    <i class="bi bi-heart heart-animation heart-beat" style="color: #ccc; font-size: 1.2rem;"></i>
+                </button>
+            {% endif %}
+        </form>
+    {% endif %}
+</td>

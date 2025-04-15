@@ -1,63 +1,72 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Calcular Insumos</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-    </style>
-</head>
-<body>
+{% extends 'recetas/base.html' %}
+
+{% block content %}
     <h1>Calcular Insumos</h1>
-    <form method="GET" action="{% url 'calcular_insumos_web' %}">
-        <label>Fecha Inicio:</label>
-        <input type="date" name="fecha_inicio" value="{{ fecha_inicio }}">
-        <label>Fecha Fin:</label>
-        <input type="date" name="fecha_fin" value="{{ fecha_fin }}">
-        <label>Temporada:</label>
-        <select name="temporada">
-            <option value="verano" {% if temporada == 'verano' %}selected{% endif %}>Verano</option>
-            <option value="invierno" {% if temporada == 'invierno' %}selected{% endif %}>Invierno</option>
-        </select>
-        <button type="submit">Calcular</button>
+
+    <form method="GET" action="{% url 'recetas:calcular_insumos_web' %}">
+        <div class="mb-3">
+            <label class="form-label">Fecha Inicio:</label>
+            <input type="date" name="fecha_inicio" value="{{ fecha_inicio }}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Fecha Fin:</label>
+            <input type="date" name="fecha_fin" value="{{ fecha_fin }}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Temporada:</label>
+            <select name="temporada" class="form-control">
+                <option value="verano" {% if temporada == 'verano' %}selected{% endif %}>Verano</option>
+                <option value="invierno" {% if temporada == 'invierno' %}selected{% endif %}>Invierno</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Calcular</button>
     </form>
+
+    <!-- 🚀 Agregamos una separación visual grande -->
+    <hr class="my-4">
 
     {% if insumos %}
         <h2>Insumos Necesarios</h2>
-        <table>
-            <tr>
-                <th>Código</th>
-                <th>Insumo</th>
-                <th>Cantidad</th>
-                <th>Unidad</th>
-            </tr>
-            {% for insumo in insumos %}
-                <tr>
-                    <td>{{ insumo.codigo }}</td>
-                    <td>{{ insumo.insumo }}</td>
-                    <td>{{ insumo.cantidad }}</td>
-                    <td>{{ insumo.unidad }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+
+        <!-- 🚀 Tabla scroll horizontal en pantallas chicas -->
+        <div style="overflow-x: auto;">
+            <table class="table table-hover table-bordered table-sm">
+                <thead class="table-light">
+                    <tr>
+                        <th>Código</th>
+                        <th>Insumo</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for insumo in insumos %}
+                        <tr>
+                            <td>{{ insumo.codigo }}</td>
+                            <td title="{{ insumo.unidad }}">{{ insumo.insumo }}</td>
+                            <td>{{ insumo.cantidad }}</td>
+                            {% comment %} <td>{{ insumo.unidad }}</td> {% endcomment %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
         <h2>Recetas Involucradas</h2>
         <ul>
             {% for menu in menus %}
                 <li>
                     {{ menu.receta.nombre }} ({{ menu.fecha }} - {{ menu.comensales }} comensales)
-
-                    <a href="{% url 'ver_receta_completa' menu.receta.id %}?fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}&temporada={{ temporada }}">Ver detalles</a>
+                    <a href="{% url 'recetas:ver_receta_completa' menu.receta.id %}?fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}&temporada={{ temporada }}" class="btn btn-info btn-sm" target="_blank">
+                        Ver detalles 🚀
+                    </a>
                 </li>
             {% endfor %}
         </ul>
 
-        <a href="{% url 'exportar_insumos_excel' %}?fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}&temporada={{ temporada }}">Exportar a Excel</a>
+        <a href="{% url 'recetas:exportar_insumos_excel' %}?fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}&temporada={{ temporada }}" class="btn btn-success" target="_blank">
+            Exportar a Excel 📥
+        </a>
     {% else %}
         <p>No hay insumos calculados para este rango de fechas.</p>
     {% endif %}
-</body>
-</html>
+{% endblock %}

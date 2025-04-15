@@ -1,0 +1,26 @@
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+<h1>Mis Notificaciones</h1>
+
+{% if notificaciones %}
+    <ul class="list-group">
+        {% for notificacion in notificaciones %}
+            <li class="list-group-item {% if not notificacion.leida %}list-group-item-warning{% endif %}">
+                {{ notificacion.mensaje }} <br>
+                <small class="text-muted">{{ notificacion.fecha }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <form method="post" class="mt-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Marcar todas como leídas</button>
+    </form>
+
+{% else %}
+    <p>No tenés notificaciones.</p>
+{% endif %}
+
+<a href="{% url 'recetas:index' %}" class="btn btn-secondary mt-3">Volver al inicio</a>
+{% endblock %}

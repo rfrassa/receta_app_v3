@@ -1,0 +1,12 @@
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+<h1>Responder Comentario</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Responder</button>
+    <a href="{% url 'recetas:ver_receta_completa' comentario.receta.id %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

@@ -16,10 +16,10 @@ class IngredienteSerializer(serializers.ModelSerializer):
 
 class RecetaSerializer(serializers.ModelSerializer):
     ingredientes = IngredienteSerializer(many=True, read_only=True)
-
+    imagen = serializers.ImageField(max_length=None, use_url=True, allow_null=True, required=False)
     class Meta:
         model = Receta
-        fields = ['id', 'codigo', 'nombre', 'temporada', 'tipo_comida', 'porciones', 'ingredientes']
+        fields = ['id', 'codigo', 'nombre', 'temporada', 'tipo_comida', 'porciones', 'ingredientes', 'imagen']
 
 class MenuDiarioSerializer(serializers.ModelSerializer):
     receta = RecetaSerializer(read_only=True)
@@ -28,3 +28,12 @@ class MenuDiarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuDiario
         fields = ['id', 'fecha', 'tipo_comida', 'receta', 'receta_id', 'temporada', 'comensales']
+
+
+class RecetaSerializer(serializers.ModelSerializer):
+    ingredientes = IngredienteSerializer(many=True, read_only=True)
+    imagen = serializers.ImageField(max_length=None, use_url=True, allow_null=True, required=False)
+
+    class Meta:
+        model = Receta
+        fields = ['id', 'codigo', 'nombre', 'temporada', 'tipo_comida', 'porciones', 'ingredientes', 'imagen']

@@ -1,0 +1,82 @@
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Ingredientes Cargados</h2>
+
+    <div class="table-responsive">
+        <form method="get" class="d-flex mb-3">
+            <input type="text" name="buscar" class="form-control me-2" placeholder="Buscar por nombre o código" value="{{ buscar }}">
+            <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+        </form>
+
+        {% if page_obj %}
+        <table class="table table-sm table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Insumo</th>
+                    <th>Cantidad</th>
+                    <th>Unidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for receta, ingredientes in page_obj %}
+                    <tr class="table-primary">
+                        <td colspan="4" class="d-flex justify-content-between align-items-center p-2">
+                            <strong>{{ receta }}</strong>
+                            <a href="{% url 'recetas:agregar_ingrediente' receta.id %}" class="btn btn-success btn-sm">➕Agregar Ingrediente</a>
+                        </td>
+                    </tr>
+
+                    {% for ingrediente in ingredientes %}
+                        <tr>
+                            <td>{{ ingrediente.insumo.nombre }}</td>
+                            <td>{{ ingrediente.cantidad }}</td>
+                            <td>{{ ingrediente.insumo.unidad }}</td>
+                            <td>
+                                <a href="{% url 'recetas:editar_ingrediente' ingrediente.id %}" class="btn btn-warning btn-sm me-1">🔍Editar</a>
+                                <a href="{% url 'recetas:eliminar_ingrediente' ingrediente.id %}" class="btn btn-danger btn-sm">🗑️Eliminar</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No hay ingredientes cargados todavía.</p>
+        {% endif %}
+    </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Paginación">
+        <ul class="pagination justify-content-center mt-4">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">Primera</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="d-flex justify-content-center mt-3">
+        <a href="{% url 'recetas:index' %}" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
+{% endblock %}

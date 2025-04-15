@@ -1,0 +1,41 @@
+1. Requisitos Previos
+Tener instalado Python 3.11 o superior.
+
+Tener instalado pip (viene con Python).
+
+2. Crear el entorno virtual (venv)
+	1- Abrí una terminal (CMD o PowerShell).
+	2- Navegá hasta la carpeta donde descomprimiste el proyecto.
+	3- Ejecutá: python -m venv venv
+	4- Activá el entorno:
+		En Windows: venv\Scripts\actívate
+		En Linux/Mac: source venv/bin/activate
+		(Recordá que siempre que trabajes con RecetasApp tenés que activar el entorno)
+
+3. Instalar las librerías necesarias
+	pip install -r requirements.txt
+
+4. Configurar la base de datos
+	Este proyecto usa una base de datos SQLite que ya está lista para usar.
+	No tenés que configurar nada más.
+	(Si quisieras empezar de cero, podés ejecutar):
+	python manage.py migrate
+
+5. Correr la aplicación
+	python manage.py runserver
+
+Y abrir el navegador en: http://localhost:8000/recetas/
+
+6. Usuario inicial
+Usuario: admin
+
+Contraseña: admin1234
+
+(Podés cambiar o crear más usuarios si querés desde el panel de administración)
+
+Accedé a:http://localhost:8000/admin/
+
+
+📬 Cualquier problema
+Contactate con el creador del proyecto (Rafael) 😎.
+

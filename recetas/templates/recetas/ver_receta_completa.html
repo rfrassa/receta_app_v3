@@ -1,25 +1,109 @@
-def calcular_insumos_web(request):
-    fecha_inicio = request.GET.get('fecha_inicio')
-    fecha_fin = request.GET.get('fecha_fin')
-    temporada = request.GET.get('temporada', 'verano')
+{% extends 'recetas/base.html' %}
 
-    insumos = []
-    menus = []
-    if fecha_inicio and fecha_fin:
-        url = 'http://127.0.0.1:8000/api/menu-diario/calcular_insumos/'
-        params = {'fecha_inicio': fecha_inicio, 'fecha_fin': fecha_fin, 'temporada': temporada}
-        response = requests.get(url, params=params)
-        if response.status_code == 200:
-            insumos = response.json()
-        
-        # Obtener los menús diarios para mostrar las recetas
-        from .models import MenuDiario
-        menus = MenuDiario.objects.filter(fecha__range=[fecha_inicio, fecha_fin], temporada=temporada)
+{% block content %}
+    <div class="container-receta">
+        <h3>{{ receta.nombre }}</h3>
+        <p><strong>Código:</strong> {{ receta.codigo }}</p>
+        <p><strong>Temporada:</strong> {{ receta.temporada }}</p>
+        <p><strong>Tipo de Comida:</strong> {{ receta.tipo_comida }}</p>
+        {# <p><strong>Porciones:</strong> {{ receta.porciones }}</p> #}
 
-    return render(request, 'recetas/calcular_insumos.html', {
-        'insumos': insumos,
-        'menus': menus,  # Añadido
-        'fecha_inicio': fecha_inicio,
-        'fecha_fin': fecha_fin,
-        'temporada': temporada
-    })
+        <h2>Ingredientes</h2>
+        {% if ingredientes %}
+            <ul>
+                {% for ingrediente in ingredientes %}
+                    <li>{{ ingrediente.insumo.nombre }}: {{ ingrediente.cantidad }} {{ ingrediente.unidad }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay ingredientes para esta receta.</p>
+        {% endif %}
+
+        {% if receta.imagen %}
+            <div class="imagen-container">
+                <img src="{{ receta.imagen.url }}" alt="Imagen de {{ receta.nombre }}" class="imagen-receta" id="imagen-receta">
+            </div>
+        {% endif %}
+
+        <div class="boton-volver">
+            <a href="{{ request.META.HTTP_REFERER|default:'/recetas/' }}" class="btn btn-secondary">Volver a recetas</a>
+        </div>
+    </div>
+
+    <style>
+        .container-receta {
+            padding: 20px;
+        }
+
+        .imagen-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .imagen-receta {
+            max-width: 100%;
+            height: auto;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            border-radius: 10px;
+        }
+
+        /* Estilo para cuando esté agrandada */
+        .ampliada {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+            z-index: 9999;
+            border: 5px solid #fff;
+            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.7);
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .boton-volver {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .container-receta {
+                padding: 10px;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            .imagen-receta {
+                max-width: 95%;
+            }
+
+            ul {
+                padding-left: 20px;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            try {
+                var imagen = document.getElementById("imagen-receta");
+                if (imagen) {
+                    imagen.addEventListener("click", function() {
+                        this.classList.toggle("ampliada");
+                    });
+                }
+            } catch(e) {
+                console.error("Error al ampliar imagen:", e);
+            }
+        });
+    </script>
+{% endblock %}

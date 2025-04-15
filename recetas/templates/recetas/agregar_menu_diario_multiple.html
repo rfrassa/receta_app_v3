@@ -1,0 +1,20 @@
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Agregar Menú Diario Múltiple</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Guardar Menús</button>
+    </form>
+
+    <hr>
+
+    <p><strong>Instrucciones:</strong> Seleccioná varias fechas separadas por coma. Ejemplo:</p>
+    <code>2025-04-15, 2025-04-16, 2025-04-17</code>
+
+    <a href="{% url 'recetas:index' %}" class="btn btn-secondary mt-4">Volver al Inicio</a>
+</div>
+{% endblock %}

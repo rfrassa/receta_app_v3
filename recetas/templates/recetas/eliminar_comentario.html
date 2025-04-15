@@ -1,0 +1,15 @@
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+<h1>Eliminar Comentario</h1>
+
+<p>¿Seguro que querés eliminar este comentario?</p>
+
+<p><strong>{{ comentario.texto }}</strong></p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+    <a href="{% url 'recetas:ver_receta_completa' comentario.receta.id %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

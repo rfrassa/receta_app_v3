@@ -1,0 +1,20 @@
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Editar Ingrediente</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label>Receta: {{ ingrediente.receta.nombre }}</label><br>
+            <label>Insumo: {{ ingrediente.insumo.nombre }}</label>
+        </div>
+        <div class="mb-3">
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" step="0.01" name="cantidad" value="{{ ingrediente.cantidad }}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="{% url 'recetas:ingredientes_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

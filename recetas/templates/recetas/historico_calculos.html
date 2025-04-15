@@ -1,50 +1,96 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Histórico de Cálculos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { padding: 20px; }
-        .container { max-width: 1000px; }
-        .table { margin-top: 20px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Histórico de Cálculos</h1>
-        <a href="{% url 'calcular_insumos_web' %}" class="btn btn-secondary mb-3">Volver</a>
-        <table class="table table-striped">
-            <thead>
+{% extends 'recetas/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Histórico de Cálculos</h1>
+
+    <a href="{% url 'recetas:calcular_insumos_web' %}" class="btn btn-secondary mb-3">Volver a Cálculo</a>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
                 <tr>
                     <th>Fecha de Cálculo</th>
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
                     <th>Temporada</th>
                     <th>Insumos</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                {% for calculo in calculos %}
-                    <tr>
-                        <td>{{ calculo.fecha_calculo }}</td>
-                        <td>{{ calculo.fecha_inicio }}</td>
-                        <td>{{ calculo.fecha_fin }}</td>
-                        <td>{{ calculo.temporada }}</td>
-                        <td>
-                            <ul>
-                                {% for item in calculo.insumos %}
-                                    <li>{{ item.codigo }} - {{ item.insumo }}: {{ item.cantidad }} {{ item.unidad }}</li>
-                                {% endfor %}
-                            </ul>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="5">No hay cálculos registrados.</td>
-                    </tr>
-                {% endfor %}
+                <tbody>
+                    {% for calculo in calculos %}
+                        <tr>
+                            <td>{{ calculo.fecha_calculo|date:"Y-m-d H:i" }}</td>
+                            <td>{{ calculo.fecha_inicio }}</td>
+                            <td>{{ calculo.fecha_fin }}</td>
+                            <td>{{ calculo.temporada|title }}</td>
+                            <td>
+                                <div style="max-height: 150px; overflow-y: auto;">
+                                    <ul class="list-unstyled">
+                                        {% for item in calculo.insumos %}
+                                            <li>{{ item.codigo }} - {{ item.insumo }}: {{ item.cantidad }}</li> 
+                                            {# 🚫 No mostramos unidad para no confundir #}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </td>
+                            <td class="text-center align-middle">
+                                    <div class="d-flex gap-2 flex-wrap">
+                                      <a href="{% url 'recetas:ver_calculo' calculo.id %}" class="btn btn-info btn-sm">
+                                          🔍 Ver
+                                      </a>
+                                      <a href="{% url 'recetas:exportar_insumos_excel' %}?fecha_inicio={{ calculo.fecha_inicio|date:'Y-m-d' }}&fecha_fin={{ calculo.fecha_fin|date:'Y-m-d' }}&temporada={{ calculo.temporada }}" 
+                                         class="btn btn-success btn-sm">
+                                         📥 Exportar
+                                      </a>
+                                      <a href="{% url 'recetas:borrar_calculo' calculo.id %}" 
+                                         class="btn btn-danger btn-sm btn-borrar" 
+                                         data-url="{% url 'recetas:borrar_calculo' calculo.id %}">
+                                         🗑️ Borrar
+                                      </a>
+                                    </div>
+                            </td>                           
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">No hay cálculos registrados.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                
             </tbody>
         </table>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const botonesBorrar = document.querySelectorAll('.btn-borrar');
+        
+                botonesBorrar.forEach(function(boton) {
+                    boton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const url = boton.getAttribute('data-url');
+        
+                        Swal.fire({
+                            title: '¿Seguro que deseas borrar este cálculo?',
+                            text: "¡Esta acción no se puede deshacer!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Sí, borrar',
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = url;
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+        
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

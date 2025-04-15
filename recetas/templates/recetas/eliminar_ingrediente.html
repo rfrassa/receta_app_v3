@@ -1,0 +1,22 @@
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Confirmar Eliminación</h2>
+    
+    <p>¿Estás seguro que querés eliminar este ingrediente de la receta?: 
+        <strong>{{ ingrediente.receta.nombre }}</strong>?</p>
+        
+    <ul>
+        <li><strong>Insumo:</strong> {{ ingrediente.insumo.nombre }}</li>
+        <li><strong>Cantidad:</strong> {{ ingrediente.cantidad }}</li>
+        <li><strong>Unidad:</strong> {{ ingrediente.insumo.unidad_medida }}</li> <!-- Si querés, opcional -->
+    </ul>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">🗑️Eliminar</button>
+        <a href="{% url 'recetas:ingredientes_list' %}" class="btn btn-secondary">❌Cancelar</a>
+    </form>
+</div>
+{% endblock %}

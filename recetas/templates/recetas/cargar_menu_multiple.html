@@ -1,0 +1,44 @@
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Agregar Menú Diario (Flexible)</h1>
+
+    <form method="post" class="row g-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar Menú</button>
+    </form>
+
+    <hr>
+
+    <h2>Menús Cargados</h2>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Fecha</th>
+                <th>Tipo Comida</th>
+                <th>Receta</th>
+                <th>Comensales</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for menu in menus %}
+                <tr>
+                    <td>{{ menu.fecha }}</td>
+                    <td>{{ menu.tipo_comida|title }}</td>
+                    <td>{{ menu.receta.nombre }}</td>
+                    <td>{{ menu.comensales }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">No hay menús cargados aún.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'recetas:index' %}" class="btn btn-secondary mt-4">Volver</a>
+</div>
+{% endblock %}

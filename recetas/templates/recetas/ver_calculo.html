@@ -1,0 +1,38 @@
+{% extends 'recetas/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Detalle del Cálculo de Insumos</h1>
+
+    <p>
+        <strong>Fecha:</strong> {{ calculo.fecha_inicio }} a {{ calculo.fecha_fin }}<br>
+        <strong>Temporada:</strong> {{ calculo.temporada|title }}
+    </p>
+
+    <hr>
+
+    <h3>Listado de Insumos</h3>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>Código</th>
+                    <th>Insumo</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in insumos %}
+                    <tr>
+                        <td>{{ item.codigo }}</td>
+                        <td>{{ item.insumo }}</td>
+                        <td>{{ item.cantidad }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{% url 'recetas:historico_calculos' %}" class="btn btn-secondary mt-3">← Volver al Histórico</a>
+</div>
+{% endblock %}
